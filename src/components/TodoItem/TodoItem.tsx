@@ -21,7 +21,7 @@ const cardtStyles = {
 const cardContentStyles = {
   display: 'flex',
   justifyContent: 'space-between',
-  flexDirection: { sm: 'column', md: 'row' },
+  flexDirection: 'row',
   flexWrap: 'wrap',
   width: '100%',
   gap: 1,
@@ -109,7 +109,9 @@ const TodoItem: FC<ITodoItem> = ({ id, title, userName, email, isDone, isEdited,
           <Chip label={userName} variant="outlined" color="secondary" size="small" />
           <Chip label={email} variant="outlined" color="secondary" size="small" />
         </Stack>
-        {userStore.isAuth && (
+      </CardContent>
+      {userStore.isAuth && (
+        <CardActions sx={cardActionsStyles}>
           <Stack direction="row" spacing={2} sx={checkboxStyles}>
             {isEdited && (
               <Chip
@@ -120,10 +122,6 @@ const TodoItem: FC<ITodoItem> = ({ id, title, userName, email, isDone, isEdited,
               />
             )}
           </Stack>
-        )}
-      </CardContent>
-      {userStore.isAuth && (
-        <CardActions sx={cardActionsStyles}>
           <Stack direction="row" spacing={2} sx={checkboxStyles}>
             <Button id={`${id}-edit`} size="small" onClick={handleEdit}>
               Edit
