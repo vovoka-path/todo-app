@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Todo app",
+  "name": "Created for BeeGee using React, Typescript, Mobx, Material UI by Vladimir Polansky.",
   "icons": [
     {
       "src": "favicon.ico",
