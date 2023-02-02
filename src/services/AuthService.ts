@@ -16,6 +16,6 @@ export default class AuthService {
   }
 
   static async refresh(): Promise<AxiosResponse<AuthResponse>> {
-    return $api.post('/users/refresh');
+    return $api.get('/users/refresh');
   }
 }
