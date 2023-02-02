@@ -30,11 +30,6 @@ const SignInModal: FC = () => {
 
   const submitForm = async () => {
     formsStore.setValidSigninFormData();
-
-      const { login, password } = formsStore.signInFormData;
-      console.log('Signin: login, password', login, password)
-      console.log('Signin:formsStore.setValidSigninFormData()', formsStore.isValidSigninFormData)
-
     if (formsStore.isValidSigninFormData) {
       const { login, password } = formsStore.signInFormData;
       const res = await userStore.signin(login, password);
