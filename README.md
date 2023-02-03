@@ -1,7 +1,7 @@
 # Todo app
 Created for BeeGee
 
-##### [Source code](https://github.com/vovoka-path/todo-app) | [Deploy](https://todo-app-api-production.up.railway.app/)
+##### [Source code](https://github.com/vovoka-path/todo-app) | [Deploy](https://todo-app-beegee.vercel.app)
 
 ## Stack
 
