@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AuthResponse } from '../models/response/AuthResponse';
 
 export const API_URL = process.env.REACT_APP_API_URL;
-
+axios.defaults.withCredentials = true;
 const $api = axios.create({
   withCredentials: true,
   baseURL: API_URL,
@@ -10,7 +10,6 @@ const $api = axios.create({
 
 $api.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
-
   return config;
 });
 
@@ -25,11 +24,12 @@ $api.interceptors.response.use(
       try {
         const response = await axios.get<AuthResponse>(`${API_URL}/users/refresh`, {
           withCredentials: true,
+          baseURL: API_URL,
         });
         localStorage.setItem('accessToken', response.data.accessToken);
         return $api.request(originalRequest);
       } catch (e) {
-        console.log('UnauthorizedError!');
+        console.log('Unauthorized Error!');
       }
     }
     throw error;

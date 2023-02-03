@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, FC, useCallback } from 'react';
+import { useEffect, useContext, FC } from 'react';
 import { Context } from '../..';
 import { color } from '../../constants';
 import { bdSvgUrl } from './bgSvg';
@@ -11,6 +11,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import { observer } from 'mobx-react-lite';
 
 const bgStyles = {
   backgroundColor: '#ffffff',
@@ -38,26 +39,18 @@ type LayoutProps = {
   children?: JSX.Element | JSX.Element[];
 };
 
-const Layout: FC<LayoutProps> = (props) => {
+const Layout: FC<LayoutProps> = ({ children }) => {
   const { userStore } = useContext(Context);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const checkAuth = useCallback(async () => {
-    await userStore.checkAuth().then(() => setIsLoading(false));
-  }, [userStore]);
 
   useEffect(() => {
     if (localStorage.getItem('accessToken')) {
+      const checkAuth = async () => await userStore.checkAuth();
       checkAuth();
-    } else {
-      userStore.setAuth(false);
-      setIsLoading(false);
     }
-  }, [checkAuth, userStore]);
+    userStore.setLoading(false);
+  }, [userStore]);
 
-  const { children } = props;
-
-  if (isLoading) return <Loading text="Checking authorization..." />;
+  if (userStore.isLoading) return <Loading text="Checking authorization..." />;
 
   return (
     <StyledEngineProvider injectFirst>
@@ -76,4 +69,4 @@ const Layout: FC<LayoutProps> = (props) => {
   );
 };
 
-export default Layout;
+export default observer(Layout);

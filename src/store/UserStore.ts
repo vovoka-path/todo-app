@@ -2,12 +2,14 @@ import { IUser } from '../models/IUser';
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import AuthService from '../services/AuthService';
+import { AuthResponse } from '../models/response/AuthResponse';
+import { API_URL } from '../api';
 
 export default class UserStore {
   user = {} as IUser;
   isAuth = false;
   isUserExist = true;
-  isLoading = false;
+  isLoading = true;
 
   constructor() {
     makeAutoObservable(this);
@@ -80,15 +82,34 @@ export default class UserStore {
   }
 
   async checkAuth() {
-    this.setLoading(true);
     try {
-      const response = await AuthService.refresh();
+      const response = await AuthService.checkauth(this.user);
+      this.setAuth(true);
+      this.setUser(response.data.user);
+    return response;
+  } catch (e) {
+      if (axios.isAxiosError(e) && e.response) {
+        this.setAuth(false);
+        console.log(e.response?.data?.message);
+      }
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
+  async refreshTokens() {
+    try {
+      const response = await axios.get<AuthResponse>(`${API_URL}/users/refresh`, {
+        withCredentials: true,
+        baseURL: API_URL,
+      });
       localStorage.setItem('accessToken', response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
-        console.log('Check Auth ERROR:', e.response?.data?.message);
+        this.setAuth(false);
+        console.log(e.response?.data?.message);
       }
     } finally {
       this.setLoading(false);
