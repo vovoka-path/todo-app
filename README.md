@@ -1,22 +1,7 @@
 # Todo app
 Created for BeeGee
 
-## Deploy
-
-- [Link](https://todo-app-api-production.up.railway.app/)
-
-## Source code
-
-- [Repository](https://github.com/vovoka-path/todo-app)
-
-## Backend for this app
-
-- [API repository](https://github.com/vovoka-path/todo-app-api)
-- [Deploy](https://todo-app-api-production.up.railway.app/)
-
-### Developer
-
-[Vladimir Polansky](https://vovoka.space)
+##### [Source code](https://github.com/vovoka-path/todo-app) | [Deploy](https://todo-app-api-production.up.railway.app/)
 
 ## Stack
 
@@ -25,20 +10,26 @@ Created for BeeGee
 - Mobx (mobx-lite)
 - Material UI
 
-## Available Scripts
+### Backend (API) for this app
 
-In the project directory, you can run:
+- [Source code](https://github.com/vovoka-path/todo-app-api)
+- [Deploy](https://todo-app-api-production.up.railway.app/)
+
+### Install
+
+###### `npm i`
+
+## Available Scripts
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Developer
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+[Vladimir Polansky](https://vovoka.space)
 
-<h3 align="center">Contact me:</h3>
-<p align="center">
+### Contact me:
+
+<p align="left">
   <a href="https://www.linkedin.com/in/areawed">
     <img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&color=f0f6fc&logo=linkedin&logoColor=0A66C2" height="32" />
   </a>
