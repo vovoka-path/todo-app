@@ -36,7 +36,7 @@
 
 ### Screenshot
 
-![2023-02-11 00_03_06-Todo app - Vivaldi](https://user-images.githubusercontent.com/76701292/218197156-5f776480-4b21-49cd-aa53-e9d30672bc95.png)
+![2023-02-11 01_00_36-Todo app - Vivaldi](https://user-images.githubusercontent.com/76701292/218207171-b25cbc05-597c-44e1-bd73-5fb50693b210.png)
 
 ### Developer
 
