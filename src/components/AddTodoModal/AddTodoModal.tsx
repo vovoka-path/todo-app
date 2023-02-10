@@ -44,6 +44,7 @@ const AddTodoModal: FC = () => {
         todoStore.updateTodo({ ...formsStore.todoFormData });
         todoStore.setCurrentPage(todoStore.pages.total);
         formsStore.setDefaultTodoFormData();
+        formsStore.setDefaultValid();
         handleClose();
       }
       formsStore.showSnackBar(isSuccessResponse);

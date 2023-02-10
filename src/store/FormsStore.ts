@@ -18,8 +18,17 @@ const defaultTodoFormData: ITodoFormData = {
   isEdited: false,
 };
 
+const isDefaultValid: IIsValidate = {
+  title: true,
+  userName: true,
+  email: true,
+  login: true,
+  password: true,
+};
+
 export default class FormsStore {
   todoFormData = {...defaultTodoFormData};
+  isValid = {...isDefaultValid};
   signInFormData = {
     login: '',
     password: '',
@@ -29,13 +38,6 @@ export default class FormsStore {
     editTodoForm: false,
     signInForm: false,
   };
-  isValid = {
-    title: true,
-    userName: true,
-    email: true,
-    login: true,
-    password: true,
-  } as IIsValidate;
   snackBar = {
     isShow: false,
   };
@@ -48,6 +50,10 @@ export default class FormsStore {
 
   setDefaultTodoFormData() {
     this.todoFormData = {...defaultTodoFormData};
+  }
+
+  setDefaultValid() {
+    this.isValid = {...isDefaultValid};
   }
 
   setFormData(data: ITodoFormData) {
