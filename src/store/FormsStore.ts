@@ -9,12 +9,17 @@ import {
   ISignInFormKeys,
 } from '../types';
 
+const defaultTodoFormData: ITodoFormData = {
+  title: '',
+  userName: '',
+  email: '',
+  id: null,
+  isDone: false,
+  isEdited: false,
+};
+
 export default class FormsStore {
-  todoFormData = {
-    id: null,
-    isDone: false,
-    isEdited: false,
-  } as ITodoFormData;
+  todoFormData = {...defaultTodoFormData};
   signInFormData = {
     login: '',
     password: '',
@@ -39,6 +44,10 @@ export default class FormsStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setDefaultTodoFormData() {
+    this.todoFormData = {...defaultTodoFormData};
   }
 
   setFormData(data: ITodoFormData) {
