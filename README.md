@@ -1,7 +1,18 @@
 # Todo app
-Created for BeeGee
-
 ##### [Source code](https://github.com/vovoka-path/todo-app) | [Deploy](https://todo-app-beegee.vercel.app)
+
+## Features
+
+- Admin login (use access/refresh tokens).
+- Any visitor without authorization can see the list of todos and create new ones.
+- The admin has the ability to edit title and checkbox 'Done'.
+- Pangination.
+- Sorting by user name, email and status.
+- After restart, the state and authorization are saved.
+- Validation and authorization errors are shown. 
+- Alerts of success/error are displayed and autohiding (feedback from backend).
+- XSS vulnerabilities are not allowed.
+
 
 ## Stack
 
