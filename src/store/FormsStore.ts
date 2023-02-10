@@ -9,8 +9,6 @@ import {
   ISignInFormKeys,
 } from '../types';
 
-// type IFormKeys = ITodoFormKeys | ISignInFormKeys;
-
 export default class FormsStore {
   todoFormData = {
     id: null,
