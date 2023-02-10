@@ -34,6 +34,10 @@
 
 ### `npm start`
 
+### Screenshot
+
+![2023-02-11 00_03_06-Todo app - Vivaldi](https://user-images.githubusercontent.com/76701292/218197156-5f776480-4b21-49cd-aa53-e9d30672bc95.png)
+
 ### Developer
 
 [Vladimir Polansky](https://vovoka.space)
