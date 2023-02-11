@@ -52,7 +52,7 @@ const SignInModal: FC = () => {
       label: 'Login',
       handler: (e) => formsStore.handleLogin(e),
       autofocus: true,
-      errorMsg: 'Enter login, please!',
+      errorMsg: `Enter login, please! You can use "admin".`,
     },
     {
       name: 'password',
@@ -60,7 +60,7 @@ const SignInModal: FC = () => {
       label: 'Password',
       handler: (e) => formsStore.handlePassword(e),
       autofocus: false,
-      errorMsg: 'Enter password, please!',
+      errorMsg: `Enter password, please! You can use "123".`,
     },
   ];
 
