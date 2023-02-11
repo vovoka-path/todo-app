@@ -5,7 +5,7 @@
 
 - Admin login (use access/refresh tokens).
 - Any visitor without authorization can see the list of todos and create new ones.
-- The admin has the ability to edit title and checkbox 'Done'.
+- The admin has the ability to edit title and checkbox 'Done'. You can use login/pass: `admin/123`.
 - Pangination.
 - Sorting by user name, email and status.
 - After restart, the state and authorization are saved.
