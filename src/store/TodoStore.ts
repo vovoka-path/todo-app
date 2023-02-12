@@ -1,6 +1,7 @@
 import { ITodo } from '../models/ITodo';
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
+import { InputName, SORTING, STORAGE } from '../constants';
 import TodoService from '../services/TodoService';
 
 export default class TodoStore {
@@ -45,11 +46,11 @@ export default class TodoStore {
   setCurrentPage(pageNumber: number) {
     this.pages.current = pageNumber;
     this.pages.todosOnPage = this.getCurretnTodosOnPage();
-    localStorage.setItem('currentPage', this.pages.current.toString());
+    localStorage.setItem(STORAGE.CURRENT_PAGE, this.pages.current.toString());
   }
 
   getCurrentPageFromStorage() {
-    const currentPageFromLocal = localStorage.getItem('currentPage');
+    const currentPageFromLocal = localStorage.getItem(STORAGE.CURRENT_PAGE);
     return parseInt(currentPageFromLocal && JSON.parse(currentPageFromLocal));
   }
 
@@ -83,21 +84,19 @@ export default class TodoStore {
   }
 
   sort(name: keyof ITodo, direction: string) {
-    const asc = 'asc';
-    const desc = 'desc';
     const todos = this.todos.sort((a, b) => {
-      if (name === 'isDone') {
+      if (name === InputName.IsDone) {
         const statusA: number = (a[name] as boolean) ? 1 : 0;
         const statusB: number = (b[name] as boolean) ? 1 : 0;
 
-        if (direction === asc) return statusA - statusB;
-        if (direction === desc) return statusB - statusA;
+        if (direction === SORTING.ASC) return statusA - statusB;
+        if (direction === SORTING.DESC) return statusB - statusA;
       } else {
         const todoA = (a[name] as string).toUpperCase();
         const todoB = (b[name] as string).toUpperCase();
 
-        if (direction === asc) return todoA < todoB ? -1 : 1;
-        if (direction === desc) return todoA > todoB ? -1 : 1;
+        if (direction === SORTING.ASC) return todoA < todoB ? -1 : 1;
+        if (direction === SORTING.DESC) return todoA > todoB ? -1 : 1;
       }
 
       return 0;

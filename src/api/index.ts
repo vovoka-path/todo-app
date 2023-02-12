@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { STORAGE } from '../constants';
 import { AuthResponse } from '../models/response/AuthResponse';
 
 export const API_URL = process.env.REACT_APP_API_URL;
@@ -9,7 +10,7 @@ const $api = axios.create({
 });
 
 $api.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
+  config.headers.Authorization = `Bearer ${localStorage.getItem(STORAGE.ACCESS_TOKEN)}`;
   return config;
 });
 
@@ -26,7 +27,7 @@ $api.interceptors.response.use(
           withCredentials: true,
           baseURL: API_URL,
         });
-        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem(STORAGE.ACCESS_TOKEN, response.data.accessToken);
         return $api.request(originalRequest);
       } catch (e) {
         console.log('Unauthorized Error!');

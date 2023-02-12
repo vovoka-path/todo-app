@@ -1,4 +1,6 @@
+import { InputName } from '../constants';
+
 export interface IUser {
-  login: string;
-  password: string;
+  [InputName.Login]: string;
+  [InputName.Password]: string;
 }

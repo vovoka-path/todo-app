@@ -1,6 +1,7 @@
 import { IUser } from '../models/IUser';
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
+import { STORAGE } from '../constants';
 import AuthService from '../services/AuthService';
 import { AuthResponse } from '../models/response/AuthResponse';
 import { API_URL } from '../api';
@@ -25,11 +26,11 @@ export default class UserStore {
 
   setAuth(bool: boolean) {
     this.isAuth = bool;
-    localStorage.setItem('isAuth', JSON.stringify(bool));
+    localStorage.setItem(STORAGE.IS_AUTH, JSON.stringify(bool));
   }
 
   getAuth() {
-    const itemFromLocal = localStorage.getItem('isAuth');
+    const itemFromLocal = localStorage.getItem(STORAGE.IS_AUTH);
     const isAuth = itemFromLocal && JSON.parse(itemFromLocal);
     return isAuth;
   }
@@ -41,7 +42,7 @@ export default class UserStore {
   async signup(login: string, password: string) {
     try {
       const response = await AuthService.signup(login, password);
-      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem(STORAGE.ACCESS_TOKEN, response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
     } catch (e) {
@@ -54,7 +55,7 @@ export default class UserStore {
   async signin(login: string, password: string) {
     try {
       const response = await AuthService.signin(login, password);
-      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem(STORAGE.ACCESS_TOKEN, response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
       return response.data.user;
@@ -69,7 +70,7 @@ export default class UserStore {
   async signout() {
     try {
       const response = await AuthService.signout();
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem(STORAGE.ACCESS_TOKEN);
       this.setAuth(false);
       this.setUser({} as IUser);
       return response;
@@ -103,7 +104,7 @@ export default class UserStore {
         withCredentials: true,
         baseURL: API_URL,
       });
-      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem(STORAGE.ACCESS_TOKEN, response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
     } catch (e) {

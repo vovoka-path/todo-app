@@ -1,6 +1,7 @@
 import { FC, SyntheticEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
+import { STORAGE, SORTING, InputName } from '../../constants';
 import TodoItem from '../TodoItem';
 import EditTodoModal from '../EditTodoModal';
 import Loading from '../../UIComponents/Loading';
@@ -65,7 +66,7 @@ const TodoList: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getCurrentPageFromStorage = useCallback(() => {
-    let currentPage = parseInt(localStorage.getItem('currentPage') as string) || 1;
+    let currentPage = parseInt(localStorage.getItem(STORAGE.CURRENT_PAGE) as string) || 1;
     todoStore.setCurrentPage(currentPage > todoStore.pages.total ? 1 : currentPage);
   }, [todoStore]);
 
@@ -89,10 +90,10 @@ const TodoList: FC = () => {
 
     if (attrData) {
       const arr: string[] = attrData?.split('-');
-      const name = arr[0] as keyof ITodo;
-      const direction = arr[1] as string;
+      const inputName = arr[0] as keyof ITodo;
+      const sortingDirection = arr[1] as string;
 
-      todoStore.sort(name, direction);
+      todoStore.sort(inputName, sortingDirection);
     }
   };
 
@@ -102,35 +103,35 @@ const TodoList: FC = () => {
     <Box sx={boxStyles}>
       <Stack direction="row" spacing={2} sx={sortButtonContainerStyles}>
         <Box sx={sortNameBoxStyles}>
-          <IconButton color="primary" aria-label="userName-asc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.UserName}-${SORTING.ASC}`} onClick={handleSort}>
             <KeyboardArrowUpOutlinedIcon />
           </IconButton>
           <Typography variant="button" color="primary" sx={sortNameStyles}>
             user
           </Typography>
-          <IconButton color="primary" aria-label="userName-desc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.UserName}-${SORTING.DESC}`} onClick={handleSort}>
             <KeyboardArrowDownOutlinedIcon />
           </IconButton>
         </Box>
         <Box sx={sortNameBoxStyles}>
-          <IconButton color="primary" aria-label="email-asc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.Email}-${SORTING.ASC}`} onClick={handleSort}>
             <KeyboardArrowUpOutlinedIcon />
           </IconButton>
           <Typography variant="button" color="primary" sx={sortNameStyles}>
             email
           </Typography>
-          <IconButton color="primary" aria-label="email-desc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.Email}-${SORTING.DESC}`} onClick={handleSort}>
             <KeyboardArrowDownOutlinedIcon />
           </IconButton>
         </Box>
         <Box sx={sortNameBoxStyles}>
-          <IconButton color="primary" aria-label="isDone-asc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.IsDone}-${SORTING.ASC}`} onClick={handleSort}>
             <KeyboardArrowUpOutlinedIcon />
           </IconButton>
           <Typography variant="button" color="primary" sx={sortNameStyles}>
             status
           </Typography>
-          <IconButton color="primary" aria-label="isDone-desc" onClick={handleSort}>
+          <IconButton color="primary" aria-label={`${InputName.IsDone}-${SORTING.DESC}`} onClick={handleSort}>
             <KeyboardArrowDownOutlinedIcon />
           </IconButton>
         </Box>

@@ -24,6 +24,17 @@ export enum FormName {
   SnackBar = 'snackBar',
 }
 
+export const SORTING = {
+  ASC: 'asc', 
+  DESC: 'desc',
+};
+
+export const STORAGE = {
+  CURRENT_PAGE: 'currentPage', 
+  ACCESS_TOKEN: 'accessToken',
+  IS_AUTH: 'isAuth',
+};
+
 export const COLOR = {
   font: '#FFFFFF',
 };

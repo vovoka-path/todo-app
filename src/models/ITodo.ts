@@ -1,8 +1,10 @@
+import { InputName } from '../constants';
+
 export interface ITodo {
-  id: string | null;
-  userName: string;
-  email: string;
-  title: string;
-  isDone: boolean;
-  isEdited: boolean;
+  [InputName.Id]: string | null;
+  [InputName.UserName]: string;
+  [InputName.Email]: string;
+  [InputName.Title]: string;
+  [InputName.IsDone]: boolean;
+  [InputName.IsEdited]: boolean;
 }

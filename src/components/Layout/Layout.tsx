@@ -1,6 +1,6 @@
 import { useEffect, useContext, FC } from 'react';
 import { Context } from '../..';
-import { COLOR } from '../../constants';
+import { COLOR, STORAGE } from '../../constants';
 import { bdSvgUrl } from './bgSvg';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -43,7 +43,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const { userStore } = useContext(Context);
 
   useEffect(() => {
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage.getItem(STORAGE.ACCESS_TOKEN)) {
       const checkAuth = async () => await userStore.checkAuth();
       checkAuth();
     }
