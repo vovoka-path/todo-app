@@ -1,6 +1,13 @@
 {
   "short_name": "Todo app",
-  "name": "Created for BeeGee using React, Typescript, Mobx, Material UI by Vladimir Polansky.",
+  "name": "Todo application with REST API",
+  "description": "Created using React, Typescript, Mobx, Material UI.",
+  "version_name": "0.1",
+  "author": "Vladimir Polansky",
+  "developer": {
+    "name": "Vladimir Polansky",
+    "url": "https://vovoka.space"
+  },
   "icons": [
     {
       "src": "favicon.ico",
