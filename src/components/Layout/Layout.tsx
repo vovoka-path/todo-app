@@ -1,6 +1,6 @@
 import { useEffect, useContext, FC } from 'react';
 import { Context } from '../..';
-import { color } from '../../constants';
+import { COLOR } from '../../constants';
 import { bdSvgUrl } from './bgSvg';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -32,7 +32,7 @@ const mainStyles = {
   flexDirection: 'column',
   justifyContent: 'start',
   flexGrow: 1,
-  color: color.font,
+  color: COLOR.font,
 };
 
 type LayoutProps = {

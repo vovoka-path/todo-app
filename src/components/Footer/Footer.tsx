@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 
 const boxStyles = {
   px: { xs: 4, sm: 10 },
-  py: { xs: 5, sm: 8 },
+  py: { xs: 4, sm: 6 },
 };
 
 const textStyles = {
@@ -22,7 +22,7 @@ const Footer: FC = () => {
   const author = {
     name: 'Vladimir Polansky',
     link: 'https://vovoka.space',
-    githubUrl: 'https://github.com/vovoka-path',
+    githubUrl: 'https://github.com/vovoka-path/todo-app',
   };
   const authorNoWrap = author.name.split(' ').join(' ');
 
@@ -31,7 +31,7 @@ const Footer: FC = () => {
       <Box sx={boxStyles}>
         <Container maxWidth="lg">
           <Typography variant="body2" align="center" sx={textStyles}>
-            Created for <strong>BeeGee</strong> using React, Typescript, Mobx, Material UI.{' '}
+            Created using React, Typescript, Mobx, Material UI.{' '}
             <MuiLink color="inherit" href={author.githubUrl} target="_blank">
               <strong>Github</strong>
             </MuiLink>

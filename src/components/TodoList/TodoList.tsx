@@ -1,7 +1,6 @@
 import { FC, SyntheticEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
-import { TodoType } from '../../types';
 import TodoItem from '../TodoItem';
 import EditTodoModal from '../EditTodoModal';
 import Loading from '../../UIComponents/Loading';
@@ -14,6 +13,7 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { ITodo } from '../../models/ITodo';
 
 const flexCenterStyle = {
   display: 'flex',
@@ -89,7 +89,7 @@ const TodoList: FC = () => {
 
     if (attrData) {
       const arr: string[] = attrData?.split('-');
-      const name = arr[0] as keyof TodoType;
+      const name = arr[0] as keyof ITodo;
       const direction = arr[1] as string;
 
       todoStore.sort(name, direction);
@@ -152,7 +152,7 @@ const TodoList: FC = () => {
           </Typography>
         )}
       </Container>
-      {formsStore.isOpen.editTodoForm && <EditTodoModal />}
+      {formsStore.isOpen.editTodo && <EditTodoModal />}
     </Box>
   );
 };

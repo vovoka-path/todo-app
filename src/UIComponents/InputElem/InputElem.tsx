@@ -2,9 +2,12 @@ import { FC, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../..';
 import { IInputElem } from '../../types';
+import { InputName } from '../../constants';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+
+const formControlLabelStyles = { minWidth: '160px' };
 
 const InputElem: FC<IInputElem> = ({
   name,
@@ -17,9 +20,10 @@ const InputElem: FC<IInputElem> = ({
 }) => {
   const { formsStore } = useContext(Context);
 
-  if (name === 'isDone') {
+  if (name === InputName.IsDone) {
     return (
       <FormControlLabel
+        sx={formControlLabelStyles}
         control={
           <Checkbox
             checked={formsStore.todoFormData.isDone}
@@ -27,7 +31,7 @@ const InputElem: FC<IInputElem> = ({
             inputProps={{ 'aria-label': 'controlled' }}
           />
         }
-        label={formsStore.todoFormData.isDone ? 'Done!' : 'Have to do!'}
+        label={formsStore.todoFormData.isDone ? 'Done!' : 'Not done...'}
       />
     );
   }

@@ -1,6 +1,7 @@
 import { FC, MouseEvent, useCallback, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
+import { FormName } from '../../constants';
 import { ITodo } from '../../models/ITodo';
 
 import Box from '@mui/material/Box';
@@ -72,7 +73,7 @@ const TodoItem: FC<ITodoItem> = ({ id, title, userName, email, isDone, isEdited,
     (e: MouseEvent<HTMLButtonElement>) => {
       const todo = getTodoByEvent(e);
       formsStore.setFormData(todo);
-      formsStore.openEditTodoForm();
+      formsStore.openModalWindow(FormName.EditTodo);
     },
     [formsStore, getTodoByEvent]
   );

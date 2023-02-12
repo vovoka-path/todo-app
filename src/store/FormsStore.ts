@@ -1,59 +1,69 @@
-import { ChangeEvent } from 'react';
 import { makeAutoObservable } from 'mobx';
-import { EMAIL_REGEXP } from '../constants';
-import {
-  IIsValidate,
-  ITodoFormData,
-  ITodoFormKeys,
-  ISignInFormData,
-  ISignInFormKeys,
-} from '../types';
+import { EMAIL_REGEXP, FormName, InputName } from '../constants';
+import { ITodo } from '../models/ITodo';
+import { IUser } from '../models/IUser';
+import { ITodoFormData, ISignInFormData, IBooleans, IFormName, IInputsForValidate } from '../types';
 
-const defaultTodoFormData: ITodoFormData = {
-  title: '',
-  userName: '',
-  email: '',
-  id: null,
-  isDone: false,
-  isEdited: false,
+interface IDefault {
+  TodoFormData: ITodoFormData;
+  SignInFormData: ISignInFormData;
+  IsValid: IBooleans;
+  IsOpen: IBooleans;
+}
+
+const DEFAULT: IDefault = {
+  TodoFormData: {
+    [InputName.Title]: '',
+    [InputName.UserName]: '',
+    [InputName.Email]: '',
+    [InputName.Id]: null,
+    [InputName.IsDone]: false,
+    [InputName.IsEdited]: false,
+  },
+  SignInFormData: {
+    [InputName.Login]: '',
+    [InputName.Password]: '',
+  },
+  IsValid: {
+    [InputName.Title]: true,
+    [InputName.UserName]: true,
+    [InputName.Email]: true,
+    [InputName.Login]: true,
+    [InputName.Password]: true,
+  },
+  IsOpen: {
+    [FormName.NewTodo]: false,
+    [FormName.EditTodo]: false,
+    [FormName.Signin]: false,
+    [FormName.SnackBar]: false,
+  },
 };
 
-const isDefaultValid: IIsValidate = {
-  title: true,
-  userName: true,
-  email: true,
-  login: true,
-  password: true,
+const inputsForValidate: IInputsForValidate = {
+  [FormName.NewTodo]: [InputName.Title, InputName.UserName, InputName.Email],
+  [FormName.EditTodo]: [InputName.Title],
+  [FormName.Signin]: [InputName.Login, InputName.Password],
 };
 
 export default class FormsStore {
-  todoFormData = {...defaultTodoFormData};
-  isValid = {...isDefaultValid};
-  signInFormData = {
-    login: '',
-    password: '',
-  } as ISignInFormData;
-  isOpen = {
-    newTodoForm: false,
-    editTodoForm: false,
-    signInForm: false,
-  };
-  snackBar = {
-    isShow: false,
-  };
+  todoFormData: ITodoFormData = { ...DEFAULT.TodoFormData };
+  signInFormData: ISignInFormData = { ...DEFAULT.SignInFormData };
+  isValid: IBooleans = { ...DEFAULT.IsValid };
+  isOpen = { ...DEFAULT.IsOpen };
   isSuccessResponse = false;
-  isValidSigninFormData = true;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setDefaultTodoFormData() {
-    this.todoFormData = {...defaultTodoFormData};
+  setDefaultFormData(formName: string) {
+    if (formName === (FormName.NewTodo || FormName.EditTodo))
+      this.todoFormData = { ...DEFAULT.TodoFormData };
+    if (formName === FormName.Signin) this.signInFormData = { ...DEFAULT.SignInFormData };
   }
 
-  setDefaultValid() {
-    this.isValid = {...isDefaultValid};
+  setDefaultIsValid() {
+    this.isValid = { ...DEFAULT.IsValid };
   }
 
   setFormData(data: ITodoFormData) {
@@ -63,38 +73,18 @@ export default class FormsStore {
     };
   }
 
-  handleTitle(e: ChangeEvent<HTMLInputElement>) {
-    this.updateTodoInput('title', e.target.value);
-  }
-
-  handleUsername(e: ChangeEvent<HTMLInputElement>) {
-    this.updateTodoInput('userName', e.target.value);
-  }
-
-  handleEmail(e: ChangeEvent<HTMLInputElement>) {
-    this.updateTodoInput('email', e.target.value);
-  }
-
-  handleIsDone(e: ChangeEvent<HTMLInputElement>) {
-    this.updateTodoValue('isDone', e.target.checked);
-  }
-
-  handleLogin(e: ChangeEvent<HTMLInputElement>) {
-    this.updateSigninInput('login', e.target.value);
-  }
-
-  handlePassword(e: ChangeEvent<HTMLInputElement>) {
-    this.updateSigninInput('password', e.target.value);
+  handle(inputName: string, value: string | boolean) {
+    if (inputName in this.todoFormData) {
+      this.updateTodoInput(inputName, value as keyof ITodoFormData);
+    }
+    if (inputName in this.signInFormData) {
+      this.updateSigninInput(inputName, value as keyof ISignInFormData);
+    }
   }
 
   updateTodoInput(inputName: string, value: string) {
     this.updateTodoValue(inputName, value);
-    this.updateIsValidTodoValue(inputName as ITodoFormKeys);
-  }
-
-  updateSigninInput(inputName: string, value: string) {
-    this.updateSignInValue(inputName, value);
-    this.updateIsValidSigninValue(inputName as ISignInFormKeys);
+    this.updateIsValidTodoValue(inputName as keyof ITodoFormData);
   }
 
   updateTodoValue(inputName: string, value: string | boolean) {
@@ -104,58 +94,17 @@ export default class FormsStore {
     };
   }
 
-  updateIsValidTodoValue(inputName: ITodoFormKeys) {
-    if (inputName === 'email') {
-      if (EMAIL_REGEXP.test(this.todoFormData.email as string)) {
-        this.isValid.email = true;
-      }
-    } else if (!!this.todoFormData[inputName]) {
-      this.isValid[inputName] = true;
+  updateIsValidTodoValue(inputName: keyof ITodoFormData) {
+    if (inputName === InputName.Email) {
+      this.isValid[inputName] = EMAIL_REGEXP.test(this.todoFormData.email as string);
+    } else {
+      this.isValid[inputName] = !!this.todoFormData[inputName as keyof ITodoFormData];
     }
   }
 
-  updateIsValidSigninValue(inputName: ISignInFormKeys) {
-    if (!!this.signInFormData[inputName]) {
-      this.isValid[inputName] = true;
-    }
-  }
-
-  checkIsValidAddTodoForm() {
-    const inputNames = ['title', 'userName', 'email'];
-
-    inputNames.forEach((inputName) => {
-      if (inputName === 'email') {
-        this.setIsValidInput(inputName, EMAIL_REGEXP.test(this.todoFormData.email as string));
-      } else {
-        this.setIsValidInput(inputName, !!this.todoFormData[inputName as ITodoFormKeys]);
-      }
-    });
-
-    return inputNames.every((inputName) => this.isValid[inputName] === true);
-  }
-
-  checkIsValidEditForm() {
-    const inputNames = ['title'];
-
-    inputNames.forEach((inputName) => {
-      this.setIsValidInput(inputName, !!this.todoFormData[inputName as ITodoFormKeys]);
-    });
-
-    return inputNames.every((inputName) => this.isValid[inputName] === true);
-  }
-
-  setValidSigninFormData() {
-    this.isValidSigninFormData = this.checkIsValidSignInForm();
-  }
-
-  checkIsValidSignInForm() {
-    const inputNames = ['login', 'password'];
-
-    inputNames.forEach((inputName) => {
-      this.setIsValidInput(inputName, !!this.signInFormData[inputName as ISignInFormKeys]);
-    });
-
-    return inputNames.every((inputName) => this.isValid[inputName] === true);
+  updateSigninInput(inputName: string, value: string) {
+    this.updateSignInValue(inputName, value);
+    this.updateIsValidSignInValue(inputName as keyof ISignInFormData);
   }
 
   updateSignInValue(inputName: string, value: string) {
@@ -165,49 +114,59 @@ export default class FormsStore {
     };
   }
 
-  updateIsValidSignInValue(inputName: ISignInFormKeys) {
-    this.isValid[inputName] = true;
+  updateIsValidSignInValue(inputName: keyof ISignInFormData) {
+    this.isValid[inputName] = !!this.signInFormData[inputName];
   }
 
-  setIsValidInput(name: string, bool: boolean) {
-    this.isValid[name] = bool;
+  checkIsValidForm(formName: keyof IInputsForValidate): boolean {
+    inputsForValidate[formName].forEach((inputName) => {
+      if (inputName in this.todoFormData) {
+        this.updateIsValidTodoValue(inputName as keyof ITodoFormData);
+      }
+
+      if (inputName in this.signInFormData) {
+        this.updateIsValidSignInValue(inputName as keyof ISignInFormData);
+      }
+    });
+    return inputsForValidate[formName].every((inputName) => this.isValid[inputName]);
   }
 
-  openNewTodoForm() {
-    this.isValid.email = true;
-    this.isOpen.newTodoForm = true;
+  openModalWindow(formName: string) {
+    this.setDefaultFormData(formName);
+    this.setDefaultIsValid();
+    this.isOpen[formName as IFormName] = true;
   }
 
-  closeNewTodoForm() {
-    this.isOpen.newTodoForm = false;
-  }
-
-  openEditTodoForm() {
-    this.isOpen.editTodoForm = true;
-  }
-
-  closeEditTodoForm() {
-    this.isOpen.editTodoForm = false;
-  }
-
-  openSignInForm() {
-    this.isOpen.signInForm = true;
-  }
-
-  closeSignInForm() {
-    this.isOpen.signInForm = false;
+  closeModalWindow(formName: string) {
+    this.isOpen[formName as IFormName] = false;
   }
 
   showSnackBar(isSuccessResponse: boolean) {
-    this.setIsSuccessResponse(isSuccessResponse);
-    this.snackBar.isShow = true;
+    this.isSuccessResponse = isSuccessResponse;
+    this.isOpen[FormName.SnackBar] = true;
   }
 
-  setIsSuccessResponse(bool: boolean) {
-    this.isSuccessResponse = bool;
+  hideSnackBar() {
+    this.isOpen[FormName.SnackBar] = false;
   }
 
-  closeSnackBar() {
-    this.snackBar.isShow = false;
+  checkTodoResponse(response: ITodo): boolean {
+    let isSuccessResponse = true;
+    for (const [key, value] of Object.entries(response)) {
+      if (key !== InputName.Id && value !== this.todoFormData[key as keyof ITodo]) {
+        isSuccessResponse = false;
+      }
+    }
+    return isSuccessResponse;
+  }
+
+  checkSignInResponse(response: IUser): boolean {
+    let isSuccessResponse = true;
+    for (const [key, value] of Object.entries(response)) {
+      if (value !== this.signInFormData[key as keyof IUser]) {
+        isSuccessResponse = false;
+      }
+    }
+    return isSuccessResponse;
   }
 }

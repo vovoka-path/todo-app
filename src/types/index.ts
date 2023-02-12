@@ -2,25 +2,36 @@ import { ChangeEvent } from 'react';
 import UserStore from '../store/UserStore';
 import TodoStore from '../store/TodoStore';
 import FormsStore from '../store/FormsStore';
+import { FormName } from '../constants';
 
 export type IUserStore = UserStore;
 export type ITodoStore = TodoStore;
 export type IFormsStore = FormsStore;
-export type ITodoFormKeys = 'id' | 'title' | 'userName' | 'email' | 'isDone' | 'isEdited';
-export type ISignInFormKeys = 'login' | 'password';
-export type TodoType = {
+
+export interface IMainStore {
+  userStore: IUserStore;
+  todoStore: ITodoStore;
+  formsStore: IFormsStore;
+}
+
+export type IFormName = FormName;
+
+export interface ITodoFormData {
   id: string | null;
   title: string;
   userName: string;
   email: string;
   isDone: boolean;
   isEdited: boolean;
-};
+}
 
-export interface IMainStore {
-  userStore: IUserStore;
-  todoStore: ITodoStore;
-  formsStore: IFormsStore;
+export interface ISignInFormData {
+  login: string;
+  password: string;
+}
+
+export interface IInputsForValidate {
+  [key: string]: string[];
 }
 
 export interface IInputElem {
@@ -34,24 +45,6 @@ export interface IInputElem {
   isDone?: boolean;
 }
 
-export interface ITodoFormData {
-  id: string | null;
-  title: string;
-  userName: string;
-  email: string;
-  isDone: boolean;
-  isEdited: boolean;
-}
-
-export interface IFormDataKeys {
-  [key: string]: string | boolean | null;
-}
-
-export interface ISignInFormData {
-  login: string;
-  password: string;
-}
-
-export interface IIsValidate {
+export interface IBooleans {
   [key: string]: boolean;
 }

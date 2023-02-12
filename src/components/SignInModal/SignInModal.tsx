@@ -2,7 +2,7 @@ import { FC, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
 import { IInputElem } from '../../types';
-import { color } from '../../constants';
+import { COLOR, InputName, InputErrorMsg, FormName } from '../../constants';
 import InputElem from '../../UIComponents/InputElem';
 
 import Button from '@mui/material/Button';
@@ -11,9 +11,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
+import { IUser } from '../../models/IUser';
 
 const signinBtnStyles = {
-  color: color.font,
+  color: COLOR.font,
 }
 
 const SignInModal: FC = () => {
@@ -21,19 +22,18 @@ const SignInModal: FC = () => {
 
   const handleClickOpen = () => {
     userStore.setUserExist(true);
-    formsStore.openSignInForm();
+    formsStore.openModalWindow(FormName.Signin);
   };
 
   const handleClose = () => {
-    formsStore.closeSignInForm();
+    formsStore.closeModalWindow(FormName.Signin);
   };
 
   const submitForm = async () => {
-    formsStore.setValidSigninFormData();
-    if (formsStore.isValidSigninFormData) {
+    if (formsStore.checkIsValidForm(FormName.Signin)) {
       const { login, password } = formsStore.signInFormData;
-      const res = await userStore.signin(login, password);
-      const isSuccessResponse = res?.login === formsStore.signInFormData.login;
+      const response: IUser | null = await userStore.signin(login, password);
+      const isSuccessResponse = response ? formsStore.checkSignInResponse(response) : false;
 
       if (isSuccessResponse) {
         handleClose();
@@ -47,20 +47,20 @@ const SignInModal: FC = () => {
 
   const inputElems: IInputElem[] = [
     {
-      name: 'login',
+      name: InputName.Login,
       type: 'text',
-      label: 'Login',
-      handler: (e) => formsStore.handleLogin(e),
+      label: 'Login... (you can use "admin")',
+      handler: (e) => formsStore.handle(InputName.Login, e.target.value),
       autofocus: true,
-      errorMsg: `Enter login, please! You can use "admin".`,
+      errorMsg: InputErrorMsg.Login,
     },
     {
-      name: 'password',
+      name: InputName.Password,
       type: 'password',
-      label: 'Password',
-      handler: (e) => formsStore.handlePassword(e),
+      label: 'Password... (you can use "123")',
+      handler: (e) => formsStore.handle(InputName.Password, e.target.value),
       autofocus: false,
-      errorMsg: `Enter password, please! You can use "123".`,
+      errorMsg: InputErrorMsg.Password,
     },
   ];
 
@@ -69,7 +69,7 @@ const SignInModal: FC = () => {
       <Button variant="text" sx={signinBtnStyles} onClick={handleClickOpen}>
         Sign in
       </Button>
-      <Dialog open={formsStore.isOpen.signInForm} onClose={handleClose}>
+      <Dialog open={formsStore.isOpen.signIn} onClose={handleClose}>
         <DialogTitle>Sign in</DialogTitle>
         <DialogContent>
           {!userStore.isUserExist && (

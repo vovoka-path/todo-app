@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../..';
-import { color } from '../../constants';
+import { COLOR } from '../../constants';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,12 +16,12 @@ const headerStyles = {
 };
 
 const titleStyles = {
-  color: color.font,
+  color: COLOR.font,
   flexGrow: 1,
 };
 
 const btnStyles = {
-  color: color.font,
+  color: COLOR.font,
 };
 
 const Header = observer(() => {

@@ -1,8 +1,9 @@
 import { FC, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
-import { ITodo } from '../../models/ITodo';
 import { IInputElem } from '../../types';
+import { InputName, InputErrorMsg, FormName } from '../../constants';
+import { ITodo } from '../../models/ITodo';
 import InputElem from '../../UIComponents/InputElem';
 
 import Button from '@mui/material/Button';
@@ -14,40 +15,28 @@ import DialogContentText from '@mui/material/DialogContentText';
 
 const EditTodoModal: FC = () => {
   const { todoStore, formsStore, userStore } = useContext(Context);
-  const todo = formsStore.todoFormData;
-  const { id, title, isDone } = todo;
-
-  const getTodoById = (id: string): ITodo => {
-    const [todo] = todoStore.todos.filter((todo) => {
-      return todo.id ? todo.id === id : false;
-    });
-
-    return todo;
-  };
+  const { id, title, isDone } = formsStore.todoFormData;
 
   const handleClose = () => {
-    formsStore.closeEditTodoForm();
+    formsStore.closeModalWindow(FormName.EditTodo);
   };
 
   const submitForm = async () => {
-    if (formsStore.checkIsValidEditForm()) {
+    if (formsStore.checkIsValidForm(FormName.EditTodo)) {
       if (localStorage.getItem('accessToken')) {
-        const isEditedTitle = id ? formsStore.todoFormData.title !== getTodoById(id).title : false;
+        const isEditedTitle =
+          formsStore.todoFormData.title !== todoStore.getTodoByIdFromStore(id as string).title;
 
-        if (isEditedTitle) formsStore.updateTodoValue('isEdited', true);
+        if (isEditedTitle) formsStore.updateTodoValue(InputName.IsEdited, true);
 
-        const updatedTodo = { ...formsStore.todoFormData } as ITodo;
-        const res = await todoStore.updateById(updatedTodo);
-
-        const { title, isDone, isEdited } = formsStore.todoFormData;
-        const isSuccessResponse =
-          res?.isDone === isDone && res?.title === title && res?.isEdited === isEdited;
+        const todoDataFromForm = { ...formsStore.todoFormData } as ITodo;
+        const response: ITodo | undefined = await todoStore.updateById(todoDataFromForm);
+        const isSuccessResponse = response ? formsStore.checkTodoResponse(response) : false;
 
         if (isSuccessResponse) {
           todoStore.updateTodo({ ...formsStore.todoFormData });
           handleClose();
         }
-
         formsStore.showSnackBar(isSuccessResponse);
       } else {
         userStore.setAuth(false);
@@ -57,24 +46,24 @@ const EditTodoModal: FC = () => {
 
   const inputElems: IInputElem[] = [
     {
-      name: 'isDone',
+      name: InputName.IsDone,
       type: 'checkbox',
-      handler: (e) => formsStore.handleIsDone(e),
+      handler: (e) => formsStore.handle(InputName.IsDone, e.target.checked),
       autofocus: false,
       isDone: isDone,
     },
     {
-      name: 'title',
+      name: InputName.Title,
       type: 'text',
-      handler: (e) => formsStore.handleTitle(e),
+      handler: (e) => formsStore.handle(InputName.Title, e.target.value),
       autofocus: true,
       value: title,
-      errorMsg: 'Enter todo description, please!',
+      errorMsg: InputErrorMsg.Title,
     },
   ];
 
   return (
-    <Dialog open={formsStore.isOpen.editTodoForm} onClose={handleClose}>
+    <Dialog open={formsStore.isOpen.editTodo} onClose={handleClose}>
       <DialogTitle>New todo</DialogTitle>
       <DialogContent>
         {!userStore.isAuth && (

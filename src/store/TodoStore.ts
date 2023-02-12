@@ -2,7 +2,6 @@ import { ITodo } from '../models/ITodo';
 import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
 import TodoService from '../services/TodoService';
-import { TodoType } from '../types';
 
 export default class TodoStore {
   todos = [] as ITodo[];
@@ -23,6 +22,14 @@ export default class TodoStore {
 
   addTodo(todo: ITodo) {
     this.todos = [...this.todos, todo];
+  }
+
+  getTodoByIdFromStore(id: string): ITodo {
+    const [todo] = this.todos.filter((todo) => {
+      return todo.id ? todo.id === id : false;
+    });
+
+    return todo;
   }
 
   setTodos(todos: ITodo[]) {
@@ -75,7 +82,7 @@ export default class TodoStore {
     this.setTodosOnPage();
   }
 
-  sort(name: keyof TodoType, direction: string) {
+  sort(name: keyof ITodo, direction: string) {
     const asc = 'asc';
     const desc = 'desc';
     const todos = this.todos.sort((a, b) => {

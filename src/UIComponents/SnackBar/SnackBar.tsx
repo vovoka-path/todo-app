@@ -21,13 +21,13 @@ const SnackBar: FC = () => {
   const { formsStore } = useContext(Context);
 
   const handleClose = () => {
-    formsStore.closeSnackBar();
+    formsStore.hideSnackBar();
   };
 
   return (
     <Snackbar
       key="todo-is-created"
-      open={formsStore.snackBar.isShow}
+      open={formsStore.isOpen.snackBar}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       autoHideDuration={2000}
       transitionDuration={{ appear: 700, enter: 1000, exit: 700 }}

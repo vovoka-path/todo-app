@@ -2,8 +2,9 @@ import { FC, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../index';
 import { IInputElem } from '../../types';
-import InputElem from '../../UIComponents/InputElem';
+import { InputName, InputErrorMsg, FormName } from '../../constants';
 import { ITodo } from '../../models/ITodo';
+import InputElem from '../../UIComponents/InputElem';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -27,24 +28,22 @@ const AddTodoModal: FC = () => {
   const { todoStore, formsStore } = useContext(Context);
 
   const handleClickOpen = () => {
-    formsStore.openNewTodoForm();
+    formsStore.openModalWindow(FormName.NewTodo);
   };
 
   const handleClose = () => {
-    formsStore.closeNewTodoForm();
+    formsStore.closeModalWindow(FormName.NewTodo);
   };
 
   const submitForm = async () => {
-    if (formsStore.checkIsValidAddTodoForm()) {
-      const updatedTodo = { ...formsStore.todoFormData, id: null, isEdited: false } as ITodo;
-      const res = await todoStore.create(updatedTodo);
-      const isSuccessResponse = res?.email === formsStore.todoFormData.email;
+    if (formsStore.checkIsValidForm(FormName.NewTodo)) {
+      const todoData: ITodo = { ...formsStore.todoFormData, id: null, isEdited: false };
+      const response: ITodo | undefined = await todoStore.create(todoData);
+      const isSuccessResponse = response ? formsStore.checkTodoResponse(response) : false;
 
       if (isSuccessResponse) {
         todoStore.updateTodo({ ...formsStore.todoFormData });
         todoStore.setCurrentPage(todoStore.pages.total);
-        formsStore.setDefaultTodoFormData();
-        formsStore.setDefaultValid();
         handleClose();
       }
       formsStore.showSnackBar(isSuccessResponse);
@@ -53,28 +52,28 @@ const AddTodoModal: FC = () => {
 
   const inputElems: IInputElem[] = [
     {
-      name: 'title',
+      name: InputName.Title,
       type: 'text',
       label: 'What to do?',
-      handler: (e) => formsStore.handleTitle(e),
+      handler: (e) => formsStore.handle(InputName.Title, e.target.value),
       autofocus: true,
-      errorMsg: 'Enter todo description, please!',
+      errorMsg: InputErrorMsg.Title,
     },
     {
-      name: 'userName',
+      name: InputName.UserName,
       type: 'text',
       label: 'Your name',
-      handler: (e) => formsStore.handleUsername(e),
+      handler: (e) => formsStore.handle(InputName.UserName, e.target.value),
       autofocus: false,
-      errorMsg: 'Enter your name, please!',
+      errorMsg: InputErrorMsg.UserName,
     },
     {
-      name: 'email',
+      name: InputName.Email,
       type: 'email',
       label: 'Your email',
-      handler: (e) => formsStore.handleEmail(e),
+      handler: (e) => formsStore.handle(InputName.Email, e.target.value),
       autofocus: false,
-      errorMsg: 'Email is not correct!',
+      errorMsg: InputErrorMsg.Email,
     },
   ];
 
@@ -90,7 +89,7 @@ const AddTodoModal: FC = () => {
         >
           New todo
         </Button>
-        <Dialog open={formsStore.isOpen.newTodoForm} onClose={handleClose}>
+        <Dialog open={formsStore.isOpen.newTodo} onClose={handleClose}>
           <DialogTitle>New todo</DialogTitle>
           <DialogContent>
             {inputElems.map((data) => (
