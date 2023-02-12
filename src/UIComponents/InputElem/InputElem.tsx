@@ -50,6 +50,7 @@ const InputElem: FC<IInputElem> = ({
       defaultValue={value}
       error={!formsStore.isValid[name]}
       helperText={!formsStore.isValid[name] && errorMsg}
+      multiline={name === InputName.Title}
     />
   );
 };
